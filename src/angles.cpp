@@ -52,7 +52,7 @@ Matrix3d EulerToMatrixLH(const EulerAngles& angle) {
         {0, 0, 1}
     } };
 
-    // Combine rotations: Rz * Ry * Rx (Z-Y-X order)
+    // Combine rotations: XYZ
     result = Rx * Ry * Rz;
 
     return result;
