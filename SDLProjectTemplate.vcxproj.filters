@@ -68,7 +68,7 @@
     <ClCompile Include="src\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\vector3.cpp">
+    <ClCompile Include="src\vector3_point3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\vector2.cpp">

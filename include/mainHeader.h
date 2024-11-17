@@ -4,6 +4,7 @@
 #ifndef MAIN_HDR_H
 #define MAIN_HDR_H
 
+#define WINDOW_HEIGHT_OFFSET 40
 // These are the window width and height, can be changed
 #define WINDOW_WIDTH 480
 #define WINDOW_HEIGHT 520

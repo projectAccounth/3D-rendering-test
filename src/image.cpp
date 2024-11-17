@@ -13,6 +13,13 @@ void image::initialize(SDL_Renderer* renderer) {
 void image::render(SDL_Renderer* renderer) {
 	if (!isVisible()) return;
 
+	if (filePath != prevFilePath) {
+		imageSurface = IMG_Load(filePath);
+		imageTexture = SDL_CreateTextureFromSurface(renderer, imageSurface);
+		SDL_FreeSurface(imageSurface);
+		prevFilePath = filePath;
+	}
+
 	SDL_RenderCopy(renderer, imageTexture, NULL, &imageRect);
 }
 
@@ -55,7 +62,7 @@ void imageManager::initAll2d(SDL_Renderer* renderer) {
 	for (auto& imgs : images2d) {
 		for (auto& img : imgs) {
 			img.initialize(renderer);
-			std::cout << "image at address " << &img << " initialized\n";
+			// std::cout << "image at address " << &img << " initialized\n";
 		}
 	}
 }

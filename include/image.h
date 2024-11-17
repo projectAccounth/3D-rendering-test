@@ -16,12 +16,14 @@ public:
 	
 	bool visible;
 	const char* filePath;
+	const char* prevFilePath;
 
 	image(const char* filePath, int width, int height, int locX, int locY):
 		imageSurface(NULL),
 		imageRect{locX, locY, width, height},
 		visible(true),
-		filePath(filePath)
+		filePath(filePath),
+		prevFilePath(filePath)
 	{}
 
 	void initialize(SDL_Renderer* renderer);

@@ -14,4 +14,6 @@ struct EulerAngles {
 
 Matrix3d EulerToMatrix(const EulerAngles& angle);
 
+Matrix3d EulerToMatrixLH(const EulerAngles& angle);
+
 #endif /* ANGLE_H */

@@ -1,4 +1,5 @@
 #include "../include/vector.h"
+#include "../include/point.h"
 
 float Vector3::dot(const Vector3& vec) const {
 	return (x * vec.x) + (y * vec.y) + (z * vec.z);
@@ -67,4 +68,12 @@ Vector2 Vector3::toXZ() const {
 
 Vector2 Vector3::toZX() const {
     return Vector2(z, x);
+}
+
+Vector3 Point3::operator-(const Point3 &other) const {
+    return Vector3(x - other.x, y - other.y, z - other.z);
+}
+
+Vector3 Point3::operator+(const Point3& other) const {
+    return Vector3(x + other.x, y + other.y, z + other.z);
 }

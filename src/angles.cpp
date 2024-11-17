@@ -27,12 +27,12 @@ Matrix3d EulerToMatrix(const EulerAngles& angles) {
     return matrix;
 }
 
-Matrix3d GetEulerRotationLH(float thetaX, float thetaY, float thetaZ) {
+Matrix3d EulerToMatrixLH(const EulerAngles& angle) {
     Matrix3d result;
 
-    float sinX = std::sin(thetaX), cosX = std::cos(thetaX);
-    float sinY = std::sin(thetaY), cosY = std::cos(thetaY);
-    float sinZ = std::sin(thetaZ), cosZ = std::cos(thetaZ);
+    float sinX = std::sin(angle.pitch), cosX = std::cos(angle.pitch);
+    float sinY = std::sin(angle.yaw), cosY = std::cos(angle.yaw);
+    float sinZ = std::sin(angle.roll), cosZ = std::cos(angle.roll);
 
     Matrix3d Rx = { {
         {1, 0, 0},
