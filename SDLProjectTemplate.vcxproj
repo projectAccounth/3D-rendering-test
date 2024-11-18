@@ -182,6 +182,7 @@
     <Bscmake />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\algorithms.h" />
     <ClInclude Include="include\angles.h" />
     <ClInclude Include="include\button.h" />
     <ClInclude Include="include\buttonManager.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="include\vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\algorithms.cpp" />
     <ClCompile Include="src\buttonManager.cpp" />
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\imageButton.cpp" />

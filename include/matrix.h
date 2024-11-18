@@ -17,6 +17,8 @@ public:
 	Matrix3d operator*(const Matrix3d& other) const;
 
 	Vector3 operator*(const Vector3& other) const;
+
+	Point3 operator*(const Point3& other) const;
 };
 
 #endif /* MATRIX_H */

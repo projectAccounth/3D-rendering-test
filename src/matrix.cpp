@@ -1,4 +1,5 @@
 #include "../include/matrix.h"
+#include "../include/point.h"
 
 Matrix3d Matrix3d::operator*(const Matrix3d& other) const {
     Matrix3d result;
@@ -41,6 +42,16 @@ Vector3 Matrix3d::operator*(const Vector3& vector) const {
     result.x = mat[0][0] * vector.x + mat[0][1] * vector.y + mat[0][2] * vector.z;
     result.y = mat[1][0] * vector.x + mat[1][1] * vector.y + mat[1][2] * vector.z;
     result.z = mat[2][0] * vector.x + mat[2][1] * vector.y + mat[2][2] * vector.z;
+
+    return result;
+}
+
+Point3 Matrix3d::operator*(const Point3& other) const {
+    Point3 result;
+
+    result.x = mat[0][0] * other.x + mat[0][1] * other.y + mat[0][2] * other.z;
+    result.y = mat[1][0] * other.x + mat[1][1] * other.y + mat[1][2] * other.z;
+    result.z = mat[2][0] * other.x + mat[2][1] * other.y + mat[2][2] * other.z;
 
     return result;
 }

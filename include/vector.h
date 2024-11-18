@@ -4,6 +4,7 @@
 #define VECTOR_H
 
 #include "mainHeader.h"
+#include "point.h"
 
 class Vector2 {
 public:
@@ -45,6 +46,8 @@ public:
 	Vector3 operator-(const Vector3& vec) const;
 
 	Vector3 operator*(float scalar) const;
+
+	Point3 operator=(const Point3& other) const;
 
 	Vector2 toXY() const;
 	Vector2 toYX() const;

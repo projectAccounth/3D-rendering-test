@@ -70,10 +70,14 @@ Vector2 Vector3::toZX() const {
     return Vector2(z, x);
 }
 
-Vector3 Point3::operator-(const Point3 &other) const {
-    return Vector3(x - other.x, y - other.y, z - other.z);
+Point3 Point3::operator-(const Point3 &other) const {
+    return Point3(x - other.x, y - other.y, z - other.z);
 }
 
-Vector3 Point3::operator+(const Point3& other) const {
-    return Vector3(x + other.x, y + other.y, z + other.z);
+Point3 Point3::operator+(const Point3& other) const {
+    return Point3(x + other.x, y + other.y, z + other.z);
+}
+
+Point3 Vector3::operator=(const Point3& other) const {
+    return Point3(x, y, z);
 }

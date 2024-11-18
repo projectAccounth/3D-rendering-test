@@ -39,13 +39,20 @@ void Program::onQuit(SDL_Window *window, SDL_Renderer *renderer) {
 	SDL_Quit();
 }
 
-void Program::programControls() {
+void Program::programControls(Point3 &position) {
 	// Getting keyboardState
 	const Uint8* keyState = SDL_GetKeyboardState(nullptr);
-	// If the A key is pressed, log "A" to stdout
-	// Add more controls by using if (keyState[SDL_SCANCODE_KEY]) // ... or switch-case.
 	if (keyState[SDL_SCANCODE_A]) {
-		std::cout << "A" << '\n';
+		position.x -= 1;
+	}
+	else if (keyState[SDL_SCANCODE_D]) {
+		position.x += 1;
+	}
+	else if (keyState[SDL_SCANCODE_S]) {
+		position.z -= 1;
+	}
+	else if (keyState[SDL_SCANCODE_W]) {
+		position.z += 1;
 	}
 }
 
