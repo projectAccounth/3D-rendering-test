@@ -48,6 +48,9 @@
     <ClInclude Include="include\algorithms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\boxes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\program.cpp">
@@ -84,6 +87,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\algorithms.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\boxes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

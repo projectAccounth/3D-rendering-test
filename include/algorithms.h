@@ -20,11 +20,13 @@ void transformObject(
 	std::vector<Point2>& projectedVertices
 );
 
-void updateAngles(EulerAngles camRotation, Point3 camPos, Point3 displayPos, std::vector<Vector3> d_vs, std::vector<Point3> vertices, std::vector<Point2> projectionPs);
+void updateAngles(EulerAngles camRotation, Point3& camPos, Point3& displayPos, std::vector<Vector3> d_vs, std::vector<Point3> vertices, std::vector<Point2> projectionPs);
 
 void resetAllImages(std::vector<std::vector<image>>& images);
 
-void updateImage(std::vector<Point3> &vertices, std::vector<Point2> &projectP, imageManager &manager);
+bool clipLine(Point3& p0, Point3& p1, float nearPlane);
+
+void updateImage(std::vector<Point3>& vertices, std::vector<Point2>& projectP, imageManager& manager, float nearPlane, Point3 displayPosition);
 
 Point3 calculateCentroid(const std::vector<Point3>& vertices);
 

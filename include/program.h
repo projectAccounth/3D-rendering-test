@@ -5,7 +5,9 @@
 #define PROGRAM_H
 
 #include "mainHeader.h"
-#include "point.h"
+#include "vector.h"
+#include "angles.h"
+#include "image.h"
 
 class Program {
 public:
@@ -19,7 +21,10 @@ public:
 	void onQuit(SDL_Window* window, SDL_Renderer* renderer);
 
 	// All program controls go here
-	void programControls(Point3 &position);
+	void programControls(EulerAngles& camRotation, Point3& position,
+		Point3& displayPos, std::vector<Vector3>& d_vs,
+		std::vector<Point3>& vertices, std::vector<Point2>& projectionPs,
+		EulerAngles& boxRotation, imageManager& manager);
 
 	bool processEvent(SDL_Event event);
 };

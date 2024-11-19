@@ -184,6 +184,7 @@
   <ItemGroup>
     <ClInclude Include="include\algorithms.h" />
     <ClInclude Include="include\angles.h" />
+    <ClInclude Include="include\boxes.h" />
     <ClInclude Include="include\button.h" />
     <ClInclude Include="include\buttonManager.h" />
     <ClInclude Include="include\image.h" />
@@ -196,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\algorithms.cpp" />
+    <ClCompile Include="src\boxes.cpp" />
     <ClCompile Include="src\buttonManager.cpp" />
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\imageButton.cpp" />

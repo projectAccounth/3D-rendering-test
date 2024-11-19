@@ -1,6 +1,7 @@
 // C++ SDL2 Template for Visual Studio 2022
 
 #include "../include/mainHeader.h"
+#include "../include/program.h"
 #include "../include/button.h"
 #include "../include/textBox.h"
 #include "../include/buttonManager.h"
@@ -9,8 +10,7 @@
 #include "../include/angles.h"
 #include "../include/vector.h"
 #include "../include/algorithms.h"
-
-int tilesCountX = 80, tilesCountY = 80;
+#include "../include/boxes.h"
 
 // initialization
 SDL_Window* mainWindow = NULL;
@@ -21,37 +21,37 @@ SDL_Color windowColor = {255, 255, 255 ,255};
 
 imageManager manager;
 buttonManager btnManager;
+BoxManager boxManager;
 
-Point3 camPos(0, 0, -30); // C_xyz
-Point3 displayPos(50, 50, -20); // E_xyz
+Point3 camPos(tilesCountX / 2, tilesCountY / 2, -30); // C_xyz
+Point3 displayPos(tilesCountX / 2, tilesCountY / 2, -20); // E_xyz
 
 EulerAngles camRotation(0, 0, 0); // theta_xyz
 EulerAngles boxRotation(0, 0, 0);
 
-// top
-Point3 p1(10, 10, 10);
-Point3 p2(10, 10, -10);
-Point3 p3(-10, 10, -10);
-Point3 p4(-10, 10, 10);
 
-// bottom
-Point3 p5(10, -10, 10);
-Point3 p6(10, -10, -10);
-Point3 p7(-10, -10, -10);
-Point3 p8(-10, -10, 10);
 
-float camFOV = 2 * std::atan(std::pow(tilesCountX, 2) / 4 * displayPos.z);
+float camFOV = 60 * M_PI / 180;// 2 * std::atan(std::pow(tilesCountX, 2) / 4 * std::abs(displayPos.z));
 
-std::vector<Point3> vertices = {p1, p2, p3, p4, p5, p6, p7, p8}; // A points (A_xyz)
+std::vector<Vector3> d_vs(16, Vector3(0, 0, 0)); // D_xyz
 
-std::vector<Vector3> d_vs(8, Vector3(0, 0, 0)); // D_xyz
-
-std::vector<Point2> projectionPs(8, Point2(0, 0)); // B_xy
+std::vector<Point2> projectionPs(16, Point2(0, 0)); // B_xy
 
 
 
 
 int main(int argc, char* argv[]) {
+	for (int i = 0; i < 1; i++) {
+		for (int j = 0; j < 1; j++) {
+			boxManager.add(Box(Point3(10 + 50 * i, 10, 10 + 50 * j), 50));
+		}
+	}
+
+	std::vector<Point3> totalVertices = boxManager.boxes[0].vertices;
+
+	for (int i = 1; i < boxManager.boxes.size(); i++) {
+		totalVertices.insert(totalVertices.end(), boxManager.boxes[i].vertices.begin(), boxManager.boxes[i].vertices.end());
+	}
 
 	manager.fill2d(0, 0, tilesCountX, tilesCountY, WINDOW_WIDTH / tilesCountX, (WINDOW_HEIGHT - WINDOW_HEIGHT_OFFSET) / tilesCountY, "./res/imgs/lamp.png");
 
@@ -94,31 +94,35 @@ int main(int argc, char* argv[]) {
 					mssnsf, CENTER, LEFT);
 
 	goDown.setAction(std::bind([&]() {
-		boxRotation.pitch -= 0.1f;
-		transformObject(boxRotation, calculateCentroid(vertices), camRotation, camPos, displayPos, vertices, projectionPs);
-		// updateAngles(camRotation, camPos, displayPos);
-		updateImage(vertices, projectionPs, manager);
+		resetAllImages(manager.images2d);
+		camRotation.pitch += 0.1f;
+		updateAngles(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs);
+		transformObject(boxRotation, calculateCentroid(totalVertices), camRotation, camPos, displayPos, totalVertices, projectionPs);
+		updateImage(totalVertices, projectionPs, manager, nearPlane, displayPos);
 	}));
 
 	goUp.setAction(std::bind([&]() {
-		boxRotation.pitch += 0.1f;
-		transformObject(boxRotation, calculateCentroid(vertices), camRotation, camPos, displayPos, vertices, projectionPs);
-		// updateAngles(camRotation, camPos, displayPos);
-		updateImage(vertices, projectionPs, manager);
+		resetAllImages(manager.images2d);
+		camRotation.pitch -= 0.1f;
+		updateAngles(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs);
+		transformObject(boxRotation, calculateCentroid(totalVertices), camRotation, camPos, displayPos, totalVertices, projectionPs);
+		updateImage(totalVertices, projectionPs, manager, nearPlane, displayPos);
 	}));
 
 	goLeft.setAction(std::bind([&]() {
-		boxRotation.yaw -= 0.1f;
-		transformObject(boxRotation, calculateCentroid(vertices), camRotation, camPos, displayPos, vertices, projectionPs);
-		// updateAngles(camRotation, camPos, displayPos);
-		updateImage(vertices, projectionPs, manager);
+		resetAllImages(manager.images2d);
+		camRotation.yaw += 0.1f;
+		updateAngles(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs);
+		transformObject(boxRotation, calculateCentroid(totalVertices), camRotation, camPos, displayPos, totalVertices, projectionPs);
+		updateImage(totalVertices, projectionPs, manager, nearPlane, displayPos);
 	}));
 
 	goRight.setAction(std::bind([&]() {
-		boxRotation.yaw += 0.1f;
-		transformObject(boxRotation, calculateCentroid(vertices), camRotation, camPos, displayPos, vertices, projectionPs);
-		// updateAngles(camRotation, camPos, displayPos);
-		updateImage(vertices, projectionPs, manager);
+		resetAllImages(manager.images2d);
+		camRotation.yaw -= 0.1f;
+		updateAngles(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs);
+		transformObject(boxRotation, calculateCentroid(totalVertices), camRotation, camPos, displayPos, totalVertices, projectionPs);
+		updateImage(totalVertices, projectionPs, manager, nearPlane, displayPos);
 	}));
 
 	btnManager.add(goDown);
@@ -132,16 +136,17 @@ int main(int argc, char* argv[]) {
 
 	bool isRunning = true;
 
-	updateAngles(camRotation, camPos, displayPos, d_vs, vertices, projectionPs);
-	transformObject(boxRotation, calculateCentroid(vertices), camRotation, camPos, displayPos, vertices, projectionPs);
-	updateImage(vertices, projectionPs, manager);
+	resetAllImages(manager.images2d);
+	transformObject(boxRotation, calculateCentroid(totalVertices), camRotation, camPos, displayPos, totalVertices, projectionPs);
+	updateAngles(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs);
+	updateImage(totalVertices, projectionPs, manager, nearPlane, displayPos);
 
 	while (isRunning) {
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
 			isRunning = program.processEvent(event);
 			btnManager.handleAllEvent(event);
-			program.programControls(camPos);
+			program.programControls(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs, boxRotation, manager);
 		}
 
 		SDL_SetRenderDrawColor(mainRenderer, windowColor.r, windowColor.g, windowColor.b, windowColor.a);

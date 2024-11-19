@@ -14,6 +14,7 @@ void image::render(SDL_Renderer* renderer) {
 	if (!isVisible()) return;
 
 	if (filePath != prevFilePath) {
+		SDL_DestroyTexture(imageTexture);
 		imageSurface = IMG_Load(filePath);
 		imageTexture = SDL_CreateTextureFromSurface(renderer, imageSurface);
 		SDL_FreeSurface(imageSurface);

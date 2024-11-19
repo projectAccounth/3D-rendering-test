@@ -1,5 +1,6 @@
 #include "../include/program.h"
 #include "../include/mainHeader.h"
+#include "../include/algorithms.h"
 
 // Definition of the createRenderer() function
 SDL_Renderer* Program::createRenderer(SDL_Window *targetWindow) {
@@ -39,20 +40,66 @@ void Program::onQuit(SDL_Window *window, SDL_Renderer *renderer) {
 	SDL_Quit();
 }
 
-void Program::programControls(Point3 &position) {
+void Program::programControls(EulerAngles& camRotation, Point3& position,
+	Point3& displayPos, std::vector<Vector3>& d_vs,
+	std::vector<Point3>& vertices, std::vector<Point2>& projectionPs,
+	EulerAngles &boxRotation, imageManager &manager) {
+
 	// Getting keyboardState
 	const Uint8* keyState = SDL_GetKeyboardState(nullptr);
 	if (keyState[SDL_SCANCODE_A]) {
-		position.x -= 1;
+		resetAllImages(manager.images2d);
+		// std::cout << "A\n";	
+		movePointLeft(position, camRotation, 1);
+		// std::cout << "Camera position: " << position.x << ' ' << position.y << '\n';
+		updateAngles(camRotation, position, displayPos, d_vs, vertices, projectionPs);
+		transformObject(boxRotation, calculateCentroid(vertices), camRotation, position, displayPos, vertices, projectionPs);
+		updateImage(vertices, projectionPs, manager, nearPlane, displayPos);
 	}
 	else if (keyState[SDL_SCANCODE_D]) {
-		position.x += 1;
+		resetAllImages(manager.images2d);
+		// std::cout << "D\n";
+		movePointRight(position, camRotation, 1);
+		// std::cout << "Camera position: " << position.x << ' ' << position.y << '\n';
+		updateAngles(camRotation, position, displayPos, d_vs, vertices, projectionPs);
+		transformObject(boxRotation, calculateCentroid(vertices), camRotation, position, displayPos, vertices, projectionPs);
+		updateImage(vertices, projectionPs, manager, nearPlane, displayPos);
 	}
 	else if (keyState[SDL_SCANCODE_S]) {
-		position.z -= 1;
+		resetAllImages(manager.images2d);
+		// std::cout << "S\n";
+		movePointBack(position, camRotation, 1);
+		// std::cout << "Camera position: " << position.x << ' ' << position.y << '\n';
+		updateAngles(camRotation, position, displayPos, d_vs, vertices, projectionPs);
+		transformObject(boxRotation, calculateCentroid(vertices), camRotation, position, displayPos, vertices, projectionPs);
+		updateImage(vertices, projectionPs, manager, nearPlane, displayPos);
 	}
 	else if (keyState[SDL_SCANCODE_W]) {
-		position.z += 1;
+		resetAllImages(manager.images2d);
+		// std::cout << "W\n";
+		movePointForward(position, camRotation, 1);
+		// std::cout << "Camera position: " << position.x << ' ' << position.y << '\n';
+		updateAngles(camRotation, position, displayPos, d_vs, vertices, projectionPs);
+		transformObject(boxRotation, calculateCentroid(vertices), camRotation, position, displayPos, vertices, projectionPs);
+		updateImage(vertices, projectionPs, manager, nearPlane, displayPos);
+	}
+	else if (keyState[SDL_SCANCODE_E]) {
+		resetAllImages(manager.images2d);
+		// std::cout << "W\n";
+		position.y += 1;
+		// std::cout << "Camera position: " << position.x << ' ' << position.y << '\n';
+		updateAngles(camRotation, position, displayPos, d_vs, vertices, projectionPs);
+		transformObject(boxRotation, calculateCentroid(vertices), camRotation, position, displayPos, vertices, projectionPs);
+		updateImage(vertices, projectionPs, manager, nearPlane, displayPos);
+	}
+	else if (keyState[SDL_SCANCODE_Q]) {
+		resetAllImages(manager.images2d);
+		// std::cout << "W\n";
+		position.y -= 1;
+		// std::cout << "Camera position: " << position.x << ' ' << position.y << '\n';
+		updateAngles(camRotation, position, displayPos, d_vs, vertices, projectionPs);
+		transformObject(boxRotation, calculateCentroid(vertices), camRotation, position, displayPos, vertices, projectionPs);
+		updateImage(vertices, projectionPs, manager, nearPlane, displayPos);
 	}
 }
 

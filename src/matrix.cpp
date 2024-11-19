@@ -1,5 +1,4 @@
 #include "../include/matrix.h"
-#include "../include/point.h"
 
 Matrix3d Matrix3d::operator*(const Matrix3d& other) const {
     Matrix3d result;

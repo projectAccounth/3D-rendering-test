@@ -5,6 +5,7 @@
 
 #include "mainHeader.h"
 #include "vector.h"
+#include "point.h"
 
 class Matrix3d {
 public:
