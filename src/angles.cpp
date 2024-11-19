@@ -3,12 +3,12 @@
 // 2 totally different implementation!!
 
 Matrix3d EulerToMatrix(const EulerAngles& angles) {
-    float cp = std::cos(angles.pitch);
-    float sp = std::sin(angles.pitch);
-    float cy = std::cos(angles.yaw);
-    float sy = std::sin(angles.yaw);
-    float cr = std::cos(angles.roll);
-    float sr = std::sin(angles.roll);
+    double cp = std::cos(angles.pitch);
+    double sp = std::sin(angles.pitch);
+    double cy = std::cos(angles.yaw);
+    double sy = std::sin(angles.yaw);
+    double cr = std::cos(angles.roll);
+    double sr = std::sin(angles.roll);
 
     Matrix3d matrix;
 
@@ -30,9 +30,9 @@ Matrix3d EulerToMatrix(const EulerAngles& angles) {
 Matrix3d EulerToMatrixLH(const EulerAngles& angle) {
     Matrix3d result;
 
-    float sinX = std::sin(angle.pitch), cosX = std::cos(angle.pitch);
-    float sinY = std::sin(angle.yaw), cosY = std::cos(angle.yaw);
-    float sinZ = std::sin(angle.roll), cosZ = std::cos(angle.roll);
+    double sinX = std::sin(angle.pitch), cosX = std::cos(angle.pitch);
+    double sinY = std::sin(angle.yaw), cosY = std::cos(angle.yaw);
+    double sinZ = std::sin(angle.roll), cosZ = std::cos(angle.roll);
 
     Matrix3d Rx = { {
         {1, 0, 0},

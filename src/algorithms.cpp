@@ -18,7 +18,7 @@ void bresenham(Point2 p0, Point2 p1, std::vector<std::vector<image>>& list) {
 	}
 
 
-	// Round the floating-point coordinates to integers for Bresenham
+	// Round the doubleing-point coordinates to integers for Bresenham
 	int x0 = static_cast<int>(std::round(p0.x));
 	int y0 = static_cast<int>(std::round(p0.y));
 	int x1 = static_cast<int>(std::round(p1.x));
@@ -37,15 +37,15 @@ void bresenham(Point2 p0, Point2 p1, std::vector<std::vector<image>>& list) {
 	// Initialize the error term for integer precision
 	int error = dx + dy;
 
-	p0 = { static_cast<float>(x0), static_cast<float>(y0) };
+	p0 = { static_cast<double>(x0), static_cast<double>(y0) };
 
 	while (true) {
 		// Use the integer rounded coordinates to set the image at the pixel location
 		if (isInsideBounds(x0, y0)) {
-			list[y0][x0].filePath = "./res/imgs/lamp_on.png";
+			list[y0][x0].filePath = "./res/imgs/orsh_0.png";
 		}
 
-		p0 = { static_cast<float>(x0), static_cast<float>(y0) }; // Update the last rounded point
+		p0 = { static_cast<double>(x0), static_cast<double>(y0) }; // Update the last rounded point
 
 		if (x0 == x1 && y0 == y1) return;
 
@@ -92,8 +92,8 @@ void transformObject(
 	}
 
 	// Step 4: Projection with Clipping
-	const float nearPlane = 0.1f; // Minimum Z-distance for rendering
-	const float EPSILON = 1e-6f;
+	const double nearPlane = 0.1f; // Minimum Z-distance for rendering
+	const double EPSILON = 1e-6f;
 
 	projectedVertices.resize(vertexCount);
 	for (size_t i = 0; i < vertexCount; ++i) {
@@ -118,9 +118,9 @@ void transformObject(
 void updateAngles(EulerAngles camRotation, Point3& camPos, Point3& displayPos,
 	std::vector<Vector3> d_vs, std::vector<Point3> vertices,
 	std::vector<Point2> projectionPs) {
-	const float nearPlane = 0.1f;
-	const float farPlane = 100.0f;
-	const float EPSILON = 1e-6f;
+	const double nearPlane = 0.1f;
+	const double farPlane = 100.0f;
+	const double EPSILON = 1e-6f;
 
 	if (d_vs.size() != vertices.size() || projectionPs.size() != vertices.size()) {
 		// std::cerr << "Size mismatch between vectors!" << std::endl;
@@ -153,11 +153,11 @@ void updateAngles(EulerAngles camRotation, Point3& camPos, Point3& displayPos,
 void resetAllImages(std::vector<std::vector<image>>& images) {
 	for (auto& imgs : images) {
 		for (auto& img : imgs) {
-			img.filePath = "./res/imgs/lamp.png";
+			img.filePath = "./res/imgs/orsh_1.png";
 		}
 	}
 }
-bool clipLine(Point3& p0, Point3& p1, float nearPlane) {
+bool clipLine(Point3& p0, Point3& p1, double nearPlane) {
 	bool p0InFront = p0.z >= nearPlane;
 	bool p1InFront = p1.z >= nearPlane;
 
@@ -166,7 +166,7 @@ bool clipLine(Point3& p0, Point3& p1, float nearPlane) {
 
 	// If one point is behind the near plane, calculate the intersection
 	if (p0InFront != p1InFront) {
-		float t = (nearPlane - p0.z) / (p1.z - p0.z);
+		double t = (nearPlane - p0.z) / (p1.z - p0.z);
 		if (!p0InFront) {
 			p0.x += t * (p1.x - p0.x);
 			p0.y += t * (p1.y - p0.y);
@@ -182,7 +182,7 @@ bool clipLine(Point3& p0, Point3& p1, float nearPlane) {
 	return true;
 }
 
-void updateImage1(std::vector<Point3>& vertices, std::vector<Point2>& projectP, imageManager& manager, float nearPlane, Point3 displayPosition) {
+void updateImage1(std::vector<Point3>& vertices, std::vector<Point2>& projectP, imageManager& manager, double nearPlane, Point3 displayPosition) {
 	for (size_t i = 0; i < projectP.size(); i++) {
 		for (size_t j = 0; j < projectP.size(); j++) {
 			if (i == j) continue;
@@ -235,7 +235,7 @@ void updateImage1(std::vector<Point3>& vertices, std::vector<Point2>& projectP, 
 	}
 }
 
-void updateImage(std::vector<Point3>& vertices, std::vector<Point2>& projectP, imageManager& manager, float nearPlane, Point3 displayPosition) {
+void updateImage(std::vector<Point3>& vertices, std::vector<Point2>& projectP, imageManager& manager, double nearPlane, Point3 displayPosition) {
 	for (int i = 0; i < projectP.size(); i++) {
 		for (int j = 0; j < projectP.size(); j++) {
 			if (i == j) continue;
@@ -276,4 +276,19 @@ Point3 calculateCentroid(const std::vector<Point3>& vertices) {
 	}
 
 	return centroid;
+}
+
+void updateAll(
+	const EulerAngles& objectRotationAngles, Point3 objectWorldPos,
+	const EulerAngles& cameraRotationAngles, Point3 &cameraPosition,
+	Point3 &displayPosition,
+	std::vector<Point3>& localVertices,
+	std::vector<Point2>& projectedVertices,
+	std::vector<Vector3>& d_vs,
+	imageManager &manager
+) {
+
+	updateAngles(cameraRotationAngles, cameraPosition, displayPosition, d_vs, localVertices, projectedVertices);
+	transformObject(objectRotationAngles, objectWorldPos, cameraRotationAngles, cameraPosition, displayPosition, localVertices, projectedVertices);
+	updateImage(localVertices, projectedVertices, manager, nearPlane, displayPosition);
 }

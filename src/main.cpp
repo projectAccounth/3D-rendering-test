@@ -31,7 +31,7 @@ EulerAngles boxRotation(0, 0, 0);
 
 
 
-float camFOV = 60 * M_PI / 180;// 2 * std::atan(std::pow(tilesCountX, 2) / 4 * std::abs(displayPos.z));
+double camFOV = 60 * M_PI / 180;// 2 * std::atan(std::pow(tilesCountX, 2) / 4 * std::abs(displayPos.z));
 
 std::vector<Vector3> d_vs(16, Vector3(0, 0, 0)); // D_xyz
 
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 		totalVertices.insert(totalVertices.end(), boxManager.boxes[i].vertices.begin(), boxManager.boxes[i].vertices.end());
 	}
 
-	manager.fill2d(0, 0, tilesCountX, tilesCountY, WINDOW_WIDTH / tilesCountX, (WINDOW_HEIGHT - WINDOW_HEIGHT_OFFSET) / tilesCountY, "./res/imgs/lamp.png");
+	manager.fill2d(0, 0, tilesCountX, tilesCountY, WINDOW_WIDTH / tilesCountX, (WINDOW_HEIGHT - WINDOW_HEIGHT_OFFSET) / tilesCountY, "./res/imgs/orsh_1.png");
 
 	Program program;
 
@@ -95,34 +95,38 @@ int main(int argc, char* argv[]) {
 
 	goDown.setAction(std::bind([&]() {
 		resetAllImages(manager.images2d);
-		camRotation.pitch += 0.1f;
-		updateAngles(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs);
-		transformObject(boxRotation, calculateCentroid(totalVertices), camRotation, camPos, displayPos, totalVertices, projectionPs);
-		updateImage(totalVertices, projectionPs, manager, nearPlane, displayPos);
+		camRotation.pitch += M_PI / 16;
+		updateAll(boxRotation, calculateCentroid(totalVertices),
+			camRotation, camPos,
+			displayPos, totalVertices,
+			projectionPs, d_vs, manager);
 	}));
 
 	goUp.setAction(std::bind([&]() {
 		resetAllImages(manager.images2d);
-		camRotation.pitch -= 0.1f;
-		updateAngles(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs);
-		transformObject(boxRotation, calculateCentroid(totalVertices), camRotation, camPos, displayPos, totalVertices, projectionPs);
-		updateImage(totalVertices, projectionPs, manager, nearPlane, displayPos);
+		camRotation.pitch -= M_PI / 16;
+		updateAll(boxRotation, calculateCentroid(totalVertices),
+			camRotation, camPos,
+			displayPos, totalVertices,
+			projectionPs, d_vs, manager);
 	}));
 
 	goLeft.setAction(std::bind([&]() {
 		resetAllImages(manager.images2d);
-		camRotation.yaw += 0.1f;
-		updateAngles(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs);
-		transformObject(boxRotation, calculateCentroid(totalVertices), camRotation, camPos, displayPos, totalVertices, projectionPs);
-		updateImage(totalVertices, projectionPs, manager, nearPlane, displayPos);
+		camRotation.yaw += M_PI / 16;
+		updateAll(boxRotation, calculateCentroid(totalVertices),
+			camRotation, camPos,
+			displayPos, totalVertices,
+			projectionPs, d_vs, manager);
 	}));
 
 	goRight.setAction(std::bind([&]() {
 		resetAllImages(manager.images2d);
-		camRotation.yaw -= 0.1f;
-		updateAngles(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs);
-		transformObject(boxRotation, calculateCentroid(totalVertices), camRotation, camPos, displayPos, totalVertices, projectionPs);
-		updateImage(totalVertices, projectionPs, manager, nearPlane, displayPos);
+		camRotation.yaw -= M_PI / 16;
+		updateAll(boxRotation, calculateCentroid(totalVertices),
+			camRotation, camPos,
+			displayPos, totalVertices,
+			projectionPs, d_vs, manager);
 	}));
 
 	btnManager.add(goDown);
@@ -137,9 +141,10 @@ int main(int argc, char* argv[]) {
 	bool isRunning = true;
 
 	resetAllImages(manager.images2d);
-	transformObject(boxRotation, calculateCentroid(totalVertices), camRotation, camPos, displayPos, totalVertices, projectionPs);
-	updateAngles(camRotation, camPos, displayPos, d_vs, totalVertices, projectionPs);
-	updateImage(totalVertices, projectionPs, manager, nearPlane, displayPos);
+	updateAll(boxRotation, calculateCentroid(totalVertices),
+			camRotation, camPos,
+			displayPos, totalVertices,
+			projectionPs, d_vs, manager);
 
 	while (isRunning) {
 		SDL_Event event;

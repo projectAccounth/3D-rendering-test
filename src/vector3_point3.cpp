@@ -2,7 +2,7 @@
 #include "../include/point.h"
 #include "../include/angles.h"
 
-float Vector3::dot(const Vector3& vec) const {
+double Vector3::dot(const Vector3& vec) const {
 	return (x * vec.x) + (y * vec.y) + (z * vec.z);
 }
 
@@ -14,7 +14,7 @@ Vector3 Vector3::cross(const Vector3& vec) const {
     );
 }
 
-float Vector3::magnitude() const {
+double Vector3::magnitude() const {
     return std::sqrt(x * x + y * y + z * z);
 }
 
@@ -34,7 +34,7 @@ Vector3 Vector3::operator-(const Vector3& vec) const {
     );
 }
 
-Vector3 Vector3::operator*(float scalar) const {
+Vector3 Vector3::operator*(double scalar) const {
     return Vector3(
         x * scalar,
         y * scalar,
@@ -43,7 +43,7 @@ Vector3 Vector3::operator*(float scalar) const {
 }
 
 Vector3 Vector3::normalize() const {
-    float mag = magnitude();
+    double mag = magnitude();
     return (mag > 0) ? Vector3(x / mag, y / mag, z / mag) : Vector3(0, 0, 0);
 }
 
@@ -83,14 +83,14 @@ Point3 Vector3::operator=(const Point3& other) const {
     return Point3(x, y, z);
 }
 
-void movePointForward(Point3& pointPosition, EulerAngles &angles, float distance) {
-    if (angles.pitch > M_PI / 2) angles.pitch = M_PI / 2;
-    if (angles.pitch < -M_PI / 2) angles.pitch = -M_PI / 2;
+void movePointForward(Point3& pointPosition, EulerAngles &angles, double distance) {
+
+    // std::cout << "Angles' sine value: " << "<" << sin(angles.pitch) << ", " << sin(angles.yaw) << ", " << sin(angles.roll) << ">\n";
 
     // Calculate the forward direction based on yaw and pitch
-    float forward_x = cos(angles.pitch) * sin(angles.yaw);
-    float forward_y = sin(angles.pitch);
-    float forward_z = cos(angles.pitch) * cos(angles.yaw);
+    double forward_x = cos(angles.pitch) * sin(angles.yaw);
+    double forward_y = -sin(angles.pitch);
+    double forward_z = cos(angles.pitch) * cos(angles.yaw);
 
     // Update the point's position by moving it forward
     pointPosition.x += forward_x * distance;
@@ -98,26 +98,24 @@ void movePointForward(Point3& pointPosition, EulerAngles &angles, float distance
     pointPosition.z += forward_z * distance;
 }
 
-void movePointLeft(Point3& pointPosition, EulerAngles &angles, float distance) {
+void movePointRight(Point3& pointPosition, EulerAngles &angles, double distance) {
 
-    float forward_x = cos(angles.pitch) * sin(angles.yaw);
-    float forward_y = sin(angles.pitch);
-    float forward_z = cos(angles.pitch) * cos(angles.yaw);
+    double forward_x = cos(angles.pitch) * sin(angles.yaw);
+    double forward_y = sin(angles.pitch);
+    double forward_z = cos(angles.pitch) * cos(angles.yaw);
 
-    float right_x = cos(angles.pitch) * cos(angles.yaw);
-    float right_y = 0.0f;
-    float right_z = -sin(angles.pitch) * sin(angles.yaw);
+    Vector3 rightVect = Vector3(forward_x, forward_y, forward_z).cross(Vector3(0, 1, 0));
 
-    pointPosition.x += right_x * distance;
-    pointPosition.y += right_y * distance;
-    pointPosition.z += right_z * distance;
+    pointPosition.x += rightVect.x * distance;
+    pointPosition.y += rightVect.y * distance;
+    pointPosition.z += rightVect.z * distance;
 }
 
 
-void movePointBack(Point3& pointPosition, EulerAngles &angles, float distance) {
+void movePointBack(Point3& pointPosition, EulerAngles &angles, double distance) {
     movePointForward(pointPosition, angles, -distance);
 }
 
-void movePointRight(Point3& pointPosition, EulerAngles &angles, float distance) {
-    movePointLeft(pointPosition, angles, -distance);
+void movePointLeft(Point3& pointPosition, EulerAngles &angles, double distance) {
+    movePointRight(pointPosition, angles, -distance);
 }

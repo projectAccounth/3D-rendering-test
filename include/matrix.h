@@ -9,7 +9,7 @@
 
 class Matrix3d {
 public:
-	float mat[3][3];
+	double mat[3][3];
 
 	Matrix3d operator+(const Matrix3d& other) const;
 

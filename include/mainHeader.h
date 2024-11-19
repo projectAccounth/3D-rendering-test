@@ -11,7 +11,7 @@
 
 const int tilesCountX = 80, tilesCountY = 80;
 
-const float nearPlane = 0.1f;
+const double nearPlane = 0.1f;
 
 // Includes for the program
 
